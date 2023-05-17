@@ -1,0 +1,4 @@
+use (#include "stb_image.h") and (#define STB_IMAGE_IMPLEMENTATION) and using stbi_load function for reading ana img from local path 
+
+use (#include "stb_image_write.h") and (#define STB_IMAGE_WRITE_IMPLEMENTATION) and using stbi_write_png for writing new img in another file called out_image.png
+
