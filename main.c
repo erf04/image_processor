@@ -24,7 +24,7 @@ char* get_str(int* len){
     * len=i;
     if (*string=='\0')
         return NULL;
-    return (str) string;
+    return string;
 }
 int isequal(str s1,str s2){
     while(*s1){
@@ -59,13 +59,7 @@ int find_format(str address,int len){
     printf("the format not valid!!\n");
 }
 char* my_strcat(char* address,char* format){
-    int i=0;
-    while(address[i]!='\0')
-        i++;
-    for(int j=0;j!=4;j++){
-        address[i++]=format[j];
-    }
-    return address;
+    snprintf(address,50,"image.%s",format);
 }
 
 BMPImage * read_bmp(str address){
@@ -165,23 +159,24 @@ int main(){
         printf("put the image url:");
         str url=get_str(&len);
         n=find_format(url,len);
-        address="image.jpg";
-        /*if (n==1){
-            my_strcat(address,".jpg");
+        //address="image.jpg";
+        if (n==1){
+            my_strcat(address,"jpg");
         }
         else if (n==2){
-            strcat(address,".png");
+            my_strcat(address,"png");
         }
         else{
-            strcat(address,".bmp");
+            my_strcat(address,"bmp");
         }
-         */
+
         get_from_url(url,address);
     }
 
 
     printf("choose the filter :");
-    printf(" 1)grayscale  2)sepia  3)blur  4)invert\n 5)gaussian blur 6)negative 7)reflect(vertical) 8)reflect(horizontal) \n");
+    printf(" 1)grayscale  2)sepia  3)blur  4)invert\n 5)gaussian blur 6)negative"
+           " 7)reflect(vertical) 8)reflect(horizontal) 9)rotate \n");
     int filter=get_int();
 
     //address="C:\\Users\\ASUS\\CLionProjects\\project\\Duck.jpg";
@@ -190,7 +185,7 @@ int main(){
     str format;
     str out_format;
 
-    printf("your image format is %s\n",format);
+
     //printf("you can write the filtered image in these formats: %s\n",out_format);
     //printf("please choose one:");
     //int out_choose_format=get_int();
@@ -200,9 +195,11 @@ int main(){
     if (n==1 || n==2){
         if (n==1){
             out_address="out_image.jpg";
+            printf("your image format is jpg\n");
         }
         else{
             out_address="out_image.png";
+            printf("your image format is png\n");
         }
 
         unsigned char *image= stbi_load(address,&x,&y,&channels,0);
@@ -278,12 +275,38 @@ int main(){
                     stbi_write_png(out_address,x,y,channels,filtered,0);
                 }
                 break;
-
-
+            case 8:
+                filtered= reflect2(image,x,y,channels);
+                if (n==1){
+                    stbi_write_jpg(out_address,x,y,channels,filtered,100);
+                }
+                else{
+                    stbi_write_png(out_address,x,y,channels,filtered,0);
+                }
+                break;
+            case 9:
+                filtered= rotate(image,x,y,channels);
+                if (n==1){
+                    stbi_write_jpg(out_address,y,x,channels,filtered,100);
+                }
+                else{
+                    stbi_write_png(out_address,y,x,channels,filtered,y*channels);
+                }
+                break;
+            case 10:
+                filtered= bright(image,x,y,channels);
+                if (n==1){
+                    stbi_write_jpg(out_address,x,y,channels,filtered,100);
+                }
+                else{
+                    stbi_write_png(out_address,y,x,channels,filtered,y*channels);
+                }
+                break;
         }
     }
     if (n==3){
-        str out_address="out_image.bmp";
+        printf("your image format is bmp\n");
+        out_address="out_image.bmp";
         BMPImage *image= read_bmp(address);
         BMPImage * filtered;
         switch (filter) {

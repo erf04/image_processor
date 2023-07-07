@@ -38,4 +38,7 @@ BMPImage * bmp_negative(BMPImage* image);
 BMPImage *bmp_reflect(BMPImage *image);
 BMPImage *bmp_reflect2(BMPImage *image);
 BMPImage * bmp_blur(BMPImage* image);
+unsigned char* reflect2(unsigned char *image, int x, int y,int channels);
+unsigned char* rotate(unsigned char *image, int width, int height,int channels);
+unsigned char* bright(unsigned char* image,int width,int height,int channels);
 #endif //PROJECT_FILTERS_H

@@ -103,11 +103,14 @@ unsigned char *reflect_filter(unsigned char *image, int x, int y,int channels) {
 unsigned char* reflect2(unsigned char *image, int x, int y,int channels){
     int i,j;
     unsigned char* output= malloc(x*y*channels);
-    for (i=0;i<y;i++){
-        for (j=0;j<x;j++){
-
+    for (j=0;j<y;j++){
+        for (i=0;i<x;i++){
+            output[(j*x+i)*channels]=image[(j*x+(x-1-i))*channels];
+            output[(j*x+i)*channels +1]=image[(j*x+(x-1-i))*channels +1];
+            output[(j*x+i)*channels+2]=image[(j*x+(x-1-i))*channels +2];
         }
     }
+    return output;
 }
 
 int find_index(int j,int i,int k,int x,int channels){
@@ -429,3 +432,27 @@ BMPImage *bmp_reflect2(BMPImage *image) {
     return copy;
 }
 
+unsigned char* rotate(unsigned char *image, int width, int height,int channels){
+    unsigned char *rotated_image = malloc(width * height * channels);
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            int index = (i * width + j) * channels;
+            int rotated_index = ((width - j - 1) * height + i) * channels;
+            for (int k = 0; k < channels; k++) {
+                rotated_image[rotated_index + k] = image[index + k];
+            }
+        }
+    }
+    return rotated_image;
+
+}
+
+unsigned char* bright(unsigned char* image,int width,int height,int channels){
+    unsigned char *bright_image= malloc(width * height * channels);
+    for (int i = 0; i < width * height * channels; i++) {
+        bright_image[i] = fminf((float)image[i] * 1.5f, 255.0f);
+    return bright_image;
+}
+
+
+}
