@@ -300,9 +300,10 @@ unsigned char *mean_filter(unsigned char *image, int width, int height,int chann
     unsigned char* mean_image= malloc(width*height*channels);
     for (i = 1; i < height - 1; i++) {
         for (j = 1; j < width - 1; j++) {
-            mean_image[i * width + j] = (image[(i - 1) * width + j - 1] + image[(i - 1) * width + j]
-                                         + image[(i - 1) * width + j + 1] + image[i * width + j - 1] + image[i * width + j] + image[i * width + j + 1]
-                                         + image[(i + 1) * width + j - 1] + image[(i + 1) * width + j] + image[(i + 1) * width + j + 1]) / 9;
+            mean_image[(i * width + j)*channels] = (image[((i - 1) * width + j)*channels -1] + image[((i - 1) * width + j)*channels]
+                                         + image[((i - 1) * width + j )*channels +1] + image[(i * width + j)*channels - 1] + image[(i * width + j)*channels]
+                                         + image[(i * width + j)*channels + 1]
+                                         + image[((i + 1) * width + j)*channels - 1] + image[((i + 1) * width)*channels + j] + image[((i + 1) * width + j)*channels + 1]) / 9;
         }
     }
     return mean_image;

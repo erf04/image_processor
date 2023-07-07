@@ -176,7 +176,7 @@ int main(){
 
     printf("choose the filter :");
     printf(" 1)grayscale  2)sepia  3)blur  4)invert\n 5)gaussian blur 6)negative"
-           " 7)reflect(vertical) 8)reflect(horizontal) 9)rotate \n");
+           " 7)reflect(vertical) 8)reflect(horizontal) 9)rotate 10)mean\n");
     int filter=get_int();
 
     //address="C:\\Users\\ASUS\\CLionProjects\\project\\Duck.jpg";
@@ -294,6 +294,15 @@ int main(){
                 }
                 break;
             case 10:
+                filtered= mean_filter(image,x,y,channels);
+                if (n==1){
+                    stbi_write_jpg(out_address,x,y,channels,filtered,100);
+                }
+                else{
+                    stbi_write_png(out_address,y,x,channels,filtered,y*channels);
+                }
+                break;
+            case 11:
                 filtered= bright(image,x,y,channels);
                 if (n==1){
                     stbi_write_jpg(out_address,x,y,channels,filtered,100);
@@ -302,6 +311,7 @@ int main(){
                     stbi_write_png(out_address,y,x,channels,filtered,y*channels);
                 }
                 break;
+
         }
     }
     if (n==3){
