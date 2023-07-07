@@ -6,6 +6,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb\stb_image_write.h"
 #include "curl/curl.h"
+#include "email.h"
 
 typedef const char* str;
 int get_int(){
@@ -40,7 +41,7 @@ int isequal(str s1,str s2){
 int find_len(str string){
     int i=0;
     while(string[i++]!='\0');
-    return i;
+    return i-1;
 }
 int find_format(str address,int len){
     char* format= malloc((sizeof (char)*4));int i=0;int j=0;
@@ -115,9 +116,9 @@ void save_bmp(BMPImage* image,str out_address){
     for (int y = 0; y <image->height; y++) {
         for (int x = 0; x < image->width; x++) {
             RGB pixel = image->data[y * image->width + x];
-            fwrite(&(pixel.b), sizeof(unsigned char), 1, out_file);
-            fwrite(&(pixel.g), sizeof(unsigned char), 1, out_file);
             fwrite(&(pixel.r), sizeof(unsigned char), 1, out_file);
+            fwrite(&(pixel.g), sizeof(unsigned char), 1, out_file);
+            fwrite(&(pixel.b), sizeof(unsigned char), 1, out_file);
         }
         for (int i=0;i<padding;i++){
             fputc(0x00,out_file);
@@ -148,14 +149,14 @@ int main(){
     //CURL * curl=curl_easy_init();
     int x,y,channels,len;
     printf("welcome to project sagi!\n");
-    printf("choose the way:1)local 2)url\n");
-    int mode=get_int(),n;char* address= malloc(sizeof (char)*100);
+    printf("choose the way:1)local 2)url 3)email\n");
+    int mode=get_int(),n;char* address= malloc(sizeof (char)*1000);
     if (mode==1){
         printf("put the image address:");
         address=get_str(&len);
         n = find_format(address,len);
     }
-    else{
+    else if (mode==2){
         printf("put the image url:");
         str url=get_str(&len);
         n=find_format(url,len);
@@ -171,6 +172,19 @@ int main(){
         }
 
         get_from_url(url,address);
+    }
+    else if (mode==3){
+        address=get_email();
+        len=find_len(address);
+        n= find_format(address,len);
+        if (address==NULL){
+            printf("Error");
+            return 0;
+        }
+    }
+    else{
+        printf("the mode not valid!!");
+        return 0;
     }
 
 
@@ -194,7 +208,7 @@ int main(){
     str out_address;
     if (n==1 || n==2){
         if (n==1){
-            out_address="out_image.jpg";
+            out_address="C:\\Users\\acer\\CLionProjects\\project\\output2.jpg";
             printf("your image format is jpg\n");
         }
         else{
